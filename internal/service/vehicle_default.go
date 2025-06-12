@@ -46,5 +46,19 @@ func getNextID(vehicles map[int]internal.Vehicle) int {
 func (s *VehicleDefault) FindByColorAndYear(vehicle internal.VehicleAttributes) (v map[int]internal.Vehicle, err error) {
 	v, err = s.rp.FindByColorAndYear(vehicle)
 
-	return v, err
+	if err != nil {
+		return map[int]internal.Vehicle{}, err
+	}
+
+	return v, nil
+}
+
+func (s *VehicleDefault) FindByBrandAndYearInterval(r internal.BrandYearRangeSearchType) (v map[int]internal.Vehicle, err error) {
+	v, err = s.rp.FindByBrandAndYearInterval(r)
+
+	if err != nil {
+		return map[int]internal.Vehicle{}, err
+	}
+
+	return v, nil
 }

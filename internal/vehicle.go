@@ -44,3 +44,9 @@ type Vehicle struct {
 	// VehicleAttribue is the attributes of a vehicle
 	VehicleAttributes
 }
+
+type BrandYearRangeSearchType struct {
+	Brand     string
+	StartYear int
+	EndYear   int
+}

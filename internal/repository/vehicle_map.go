@@ -45,3 +45,21 @@ func (r *VehicleMap) FindByColorAndYear(vehicle internal.VehicleAttributes) (v m
 
 	return v, nil
 }
+
+func (r *VehicleMap) FindByBrandAndYearInterval(req internal.BrandYearRangeSearchType) (v map[int]internal.Vehicle, err error) {
+	v = make(map[int]internal.Vehicle)
+
+	for key, value := range r.db {
+		if value.Brand == req.Brand {
+			if value.FabricationYear >= req.StartYear && value.FabricationYear <= req.EndYear {
+				v[key] = value
+			}
+		}
+	}
+
+	if len(v) == 0 {
+		return v, err
+	}
+
+	return v, nil
+}

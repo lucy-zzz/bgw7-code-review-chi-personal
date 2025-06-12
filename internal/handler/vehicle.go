@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/bootcamp-go/web/response"
+	"github.com/go-chi/chi/v5"
 )
 
 // VehicleJSON is a struct that represents a vehicle in JSON format
@@ -126,6 +127,8 @@ func (h *VehicleDefault) GetByColorAndYear() http.HandlerFunc {
 		year, err := strconv.Atoi(yearStr)
 
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(`{"message":"Parâmetro year inválido ou ausente."}`))
 			return
 		}
 
@@ -156,8 +159,42 @@ func (h *VehicleDefault) GetByColorAndYear() http.HandlerFunc {
 
 func (h *VehicleDefault) GetByBrandAndYearInterval() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		brand := r.URL.Query().Get("brand")
-		startYear := r.URL.Query().Get("start_year")
-		endYear := r.URL.Query().Get("end_year")
+
+		brand := chi.URLParam(r, "brand")
+		startYearStr := chi.URLParam(r, "start_year")
+		endYearStr := chi.URLParam(r, "end_year")
+
+		startYear, err := strconv.Atoi(startYearStr)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(`{"message":"Parâmetro start_year inválido ou ausente."}`))
+			return
+		}
+
+		endYear, err := strconv.Atoi(endYearStr)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(`{"message":"Parâmetro end_year inválido ou ausente."}`))
+			return
+		}
+
+		req := internal.BrandYearRangeSearchType{
+			Brand:     brand,
+			StartYear: startYear,
+			EndYear:   endYear,
+		}
+
+		vehiclesList, err := h.sv.FindByBrandAndYearInterval(req)
+
+		if err != nil {
+			w.Write([]byte(`{message: 404 Not Found: Nenhum veículo encontrado com esses critérios. }`))
+			response.JSON(w, http.StatusNotFound, 404)
+			return
+		}
+
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "success",
+			"data":    vehiclesList,
+		})
 	}
 }

@@ -1,6 +1,8 @@
 package service
 
-import "app/internal"
+import (
+	"app/internal"
+)
 
 // NewVehicleDefault is a function that returns a new instance of VehicleDefault
 func NewVehicleDefault(rp internal.VehicleRepository) *VehicleDefault {
@@ -58,6 +60,16 @@ func (s *VehicleDefault) FindByBrandAndYearInterval(r internal.BrandYearRangeSea
 
 	if err != nil {
 		return map[int]internal.Vehicle{}, err
+	}
+
+	return v, nil
+}
+
+func (s *VehicleDefault) GetAverageSpeedByBrand(b string) (v float64, err error) {
+	v, err = s.rp.GetAverageSpeedByBrand(b)
+
+	if err != nil {
+		return 0, err
 	}
 
 	return v, nil

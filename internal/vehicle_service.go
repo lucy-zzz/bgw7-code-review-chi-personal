@@ -7,4 +7,5 @@ type VehicleService interface {
 	Create(newVehicle VehicleAttributes) (v Vehicle, err error)
 	FindByColorAndYear(vehicle VehicleAttributes) (v map[int]Vehicle, err error)
 	FindByBrandAndYearInterval(r BrandYearRangeSearchType) (v map[int]Vehicle, err error)
+	GetAverageSpeedByBrand(b string) (v float64, err error)
 }

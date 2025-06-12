@@ -198,3 +198,21 @@ func (h *VehicleDefault) GetByBrandAndYearInterval() http.HandlerFunc {
 		})
 	}
 }
+
+func (h *VehicleDefault) GetAverageSpeedByBrand() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		brand := chi.URLParam(r, "brand")
+
+		averageSpeed, err := h.sv.GetAverageSpeedByBrand(brand)
+
+		if err != nil {
+			w.Write([]byte(`{message: 404 Not Found: Nenhum veículo encontrado dessa marca.}`))
+			response.JSON(w, http.StatusNotFound, 404)
+		}
+
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "success",
+			"data":    averageSpeed})
+
+	}
+}

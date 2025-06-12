@@ -4,6 +4,7 @@ import (
 	"app/internal"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/bootcamp-go/web/response"
 )
@@ -116,5 +117,47 @@ func (h *VehicleDefault) Create() http.HandlerFunc {
 		})
 
 	}
+}
 
+func (h *VehicleDefault) GetByColorAndYear() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		color := r.URL.Query().Get("color")
+		yearStr := r.URL.Query().Get("year")
+		year, err := strconv.Atoi(yearStr)
+
+		if err != nil {
+			return
+		}
+
+		input := internal.VehicleAttributes{
+			Color:           color,
+			FabricationYear: year,
+		}
+
+		vehicle := internal.VehicleAttributes{
+			Color:           input.Color,
+			FabricationYear: input.FabricationYear,
+		}
+
+		vehiclesList, err := h.sv.FindByColorAndYear(vehicle)
+
+		if err != nil {
+			w.Write([]byte(`{message: 404 Not Found: Nenhum veículo encontrado com esses critérios. }`))
+			response.JSON(w, http.StatusNotFound, 404)
+			return
+		}
+
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "success",
+			"data":    vehiclesList,
+		})
+	}
+}
+
+func (h *VehicleDefault) GetByBrandAndYearInterval() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		brand := r.URL.Query().Get("brand")
+		startYear := r.URL.Query().Get("start_year")
+		endYear := r.URL.Query().Get("end_year")
+	}
 }

@@ -5,4 +5,5 @@ type VehicleService interface {
 	// FindAll is a method that returns a map of all vehicles
 	FindAll() (v map[int]Vehicle, err error)
 	Create(newVehicle VehicleAttributes) (v Vehicle, err error)
+	FindByColorAndYear(vehicle VehicleAttributes) (v map[int]Vehicle, err error)
 }

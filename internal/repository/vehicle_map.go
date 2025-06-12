@@ -30,6 +30,18 @@ func (r *VehicleMap) FindAll() (v map[int]internal.Vehicle, err error) {
 	return
 }
 
-func (r *VehicleMap) CreateVehicle(v *internal.VehicleAttributes) (err error) {
-	return nil
+func (r *VehicleMap) FindByColorAndYear(vehicle internal.VehicleAttributes) (v map[int]internal.Vehicle, err error) {
+	v = make(map[int]internal.Vehicle)
+
+	for key, value := range r.db {
+		if vehicle.Color == value.Color && vehicle.FabricationYear == value.FabricationYear {
+			v[key] = value
+		}
+	}
+
+	if len(v) == 0 {
+		return v, err
+	}
+
+	return v, nil
 }

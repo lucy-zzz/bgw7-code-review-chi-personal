@@ -42,3 +42,9 @@ func getNextID(vehicles map[int]internal.Vehicle) int {
 	}
 	return maxID + 1
 }
+
+func (s *VehicleDefault) FindByColorAndYear(vehicle internal.VehicleAttributes) (v map[int]internal.Vehicle, err error) {
+	v, err = s.rp.FindByColorAndYear(vehicle)
+
+	return v, err
+}

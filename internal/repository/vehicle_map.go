@@ -2,6 +2,7 @@ package repository
 
 import (
 	"app/internal"
+	"fmt"
 )
 
 // NewVehicleMap is a function that returns a new instance of VehicleMap
@@ -132,6 +133,26 @@ func (r *VehicleMap) CreateSome(vs []internal.VehicleAttributes) (err error) {
 			Id:                newID,
 			VehicleAttributes: v,
 		}
+	}
+
+	return nil
+}
+
+func (r *VehicleMap) UpdateSpeed(v internal.UpdateSpeed) (err error) {
+	var vehicle internal.Vehicle
+
+	for i := 0; i <= len(r.db); i++ {
+		if r.db[i].Id == v.Id {
+			vehicle = r.db[i]
+			vehicle.MaxSpeed = v.Speed
+			fmt.Println(v.Speed, "v.Speed")
+			fmt.Println(vehicle.MaxSpeed, "MaxSpeed")
+			break
+		}
+	}
+
+	if vehicle.Id == 0 {
+		return err
 	}
 
 	return nil

@@ -3,6 +3,7 @@ package handler
 import (
 	"app/internal"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -85,6 +86,7 @@ func (h *VehicleDefault) Create() http.HandlerFunc {
 		var input internal.VehicleAttributes
 
 		err := json.NewDecoder(r.Body).Decode(&input)
+
 		if err != nil {
 			w.Write([]byte(`{message: 400 Bad Request: Dados do veículo mal formatados ou incompletos.}`))
 			response.JSON(w, http.StatusBadRequest, 400)
@@ -116,27 +118,6 @@ func (h *VehicleDefault) Create() http.HandlerFunc {
 			"message": "success",
 		})
 
-	}
-}
-
-func (h *VehicleDefault) CreateSome() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var input []internal.VehicleAttributes
-		err := json.NewDecoder(r.Body).Decode(&input)
-
-		if err != nil {
-			w.Write([]byte(`"message": "400 Bad Request: Dados de algum veículo malformados ou incompletos."`))
-			response.JSON(w, http.StatusBadRequest, 400)
-		}
-
-		err = h.sv.CreateSome(input)
-
-		if err != nil {
-			w.Write([]byte(`"message": "409 Conflict: Algum veículo possui um identificador já existente."`))
-			response.JSON(w, http.StatusConflict, 409)
-		}
-
-		response.JSON(w, http.StatusCreated, 201)
 	}
 }
 
@@ -228,11 +209,77 @@ func (h *VehicleDefault) GetAverageSpeedByBrand() http.HandlerFunc {
 		if err != nil {
 			w.Write([]byte(`{message: 404 Not Found: Nenhum veículo encontrado dessa marca.}`))
 			response.JSON(w, http.StatusNotFound, 404)
+			return
 		}
 
 		response.JSON(w, http.StatusOK, map[string]any{
 			"message": "success",
 			"data":    averageSpeed})
 
+	}
+}
+
+func (h *VehicleDefault) CreateSome() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var input []internal.VehicleAttributes
+		err := json.NewDecoder(r.Body).Decode(&input)
+
+		if err != nil {
+			w.Write([]byte(`"message": "400 Bad Request: Dados de algum veículo malformados ou incompletos."`))
+			response.JSON(w, http.StatusBadRequest, 400)
+			return
+		}
+
+		err = h.sv.CreateSome(input)
+
+		if err != nil {
+			w.Write([]byte(`"message": "409 Conflict: Algum veículo possui um identificador já existente."`))
+			response.JSON(w, http.StatusConflict, 409)
+			return
+		}
+
+		response.JSON(w, http.StatusCreated, 201)
+	}
+}
+
+func (h *VehicleDefault) UpdateSpeed() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var s struct {
+			Speed float64 `json:"speed"`
+		}
+
+		err := json.NewDecoder(r.Body).Decode(&s)
+
+		if err != nil {
+			response.JSON(w, http.StatusBadRequest, `{"message": "400 Bad Request: Velocidade malformada ou fora de alcance."}`)
+			return
+		}
+
+		idStr := chi.URLParam(r, "id")
+		id, err := strconv.Atoi(idStr)
+
+		if err != nil {
+			w.Write([]byte(`400 Bad Request: Velocidade malformada ou fora de alcance.`))
+			response.JSON(w, http.StatusBadRequest, 400)
+			return
+		}
+
+		var u internal.UpdateSpeed
+		u = internal.UpdateSpeed{
+			Id:    int(id),
+			Speed: s.Speed,
+		}
+
+		fmt.Println(u, "struct on handler")
+
+		err = h.sv.UpdateSpeed(u)
+
+		if err != nil {
+			w.Write([]byte(`404 Not Found: Veículo não encontrado.`))
+			response.JSON(w, http.StatusNotFound, 404)
+			return
+		}
+
+		response.JSON(w, http.StatusOK, 200)
 	}
 }

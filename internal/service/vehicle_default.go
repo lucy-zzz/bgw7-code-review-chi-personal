@@ -69,3 +69,13 @@ func (s *VehicleDefault) CreateSome(vs []internal.VehicleAttributes) (err error)
 
 	return nil
 }
+
+func (s *VehicleDefault) UpdateSpeed(v internal.UpdateSpeed) (err error) {
+	err = s.rp.UpdateSpeed(v)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

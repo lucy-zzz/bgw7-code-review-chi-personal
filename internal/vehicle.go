@@ -50,3 +50,8 @@ type BrandYearRangeSearchType struct {
 	StartYear int
 	EndYear   int
 }
+
+type UpdateSpeed struct {
+	Id    int
+	Speed float64
+}

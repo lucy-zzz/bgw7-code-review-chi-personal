@@ -9,4 +9,5 @@ type VehicleRepository interface {
 	GetAverageSpeedByBrand(b string) (v float64, err error)
 	Create(v VehicleAttributes) (err error)
 	CreateSome(vs []VehicleAttributes) (err error)
+	UpdateSpeed(v UpdateSpeed) (err error)
 }

@@ -7,4 +7,6 @@ type VehicleRepository interface {
 	FindByColorAndYear(vehicle VehicleAttributes) (v map[int]Vehicle, err error)
 	FindByBrandAndYearInterval(r BrandYearRangeSearchType) (v map[int]Vehicle, err error)
 	GetAverageSpeedByBrand(b string) (v float64, err error)
+	Create(v VehicleAttributes) (err error)
+	CreateSome(vs []VehicleAttributes) (err error)
 }

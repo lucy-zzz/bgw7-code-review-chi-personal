@@ -21,28 +21,13 @@ func (s *VehicleDefault) FindAll() (v map[int]internal.Vehicle, err error) {
 	return
 }
 
-func (s *VehicleDefault) Create(new internal.VehicleAttributes) (v internal.Vehicle, err error) {
-	all, err := s.rp.FindAll()
+func (s *VehicleDefault) Create(new internal.VehicleAttributes) (err error) {
+	err = s.rp.Create(new)
 
 	if err != nil {
-		return internal.Vehicle{}, err
+		return err
 	}
-
-	v = internal.Vehicle{
-		Id:                getNextID(all),
-		VehicleAttributes: new,
-	}
-	return v, nil
-}
-
-func getNextID(vehicles map[int]internal.Vehicle) int {
-	maxID := 0
-	for _, v := range vehicles {
-		if v.Id > maxID {
-			maxID = v.Id
-		}
-	}
-	return maxID + 1
+	return nil
 }
 
 func (s *VehicleDefault) FindByColorAndYear(vehicle internal.VehicleAttributes) (v map[int]internal.Vehicle, err error) {
@@ -73,4 +58,14 @@ func (s *VehicleDefault) GetAverageSpeedByBrand(b string) (v float64, err error)
 	}
 
 	return v, nil
+}
+
+func (s *VehicleDefault) CreateSome(vs []internal.VehicleAttributes) (err error) {
+	err = s.rp.CreateSome(vs)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

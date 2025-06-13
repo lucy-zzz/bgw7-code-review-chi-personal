@@ -86,3 +86,53 @@ func (r *VehicleMap) GetAverageSpeedByBrand(b string) (v float64, err error) {
 
 	return sumSpeed / float64(len(brandList)), nil
 }
+
+func (r *VehicleMap) Create(v internal.VehicleAttributes) (err error) {
+	vehicleList := make(map[int]internal.Vehicle)
+
+	maxKey := 0
+	for _, v := range r.db {
+		if v.Id > maxKey {
+			maxKey = v.Id
+		}
+	}
+
+	newID := maxKey + 1
+
+	if _, exists := r.db[newID]; exists {
+		return err
+	}
+
+	vehicleList[newID] = internal.Vehicle{
+		Id:                newID,
+		VehicleAttributes: v,
+	}
+
+	return nil
+}
+
+func (r *VehicleMap) CreateSome(vs []internal.VehicleAttributes) (err error) {
+	vehicleList := make(map[int]internal.Vehicle)
+
+	maxKey := 0
+	for k := range r.db {
+		if k > maxKey {
+			maxKey = k
+		}
+	}
+
+	for i, v := range vs {
+		newID := maxKey + 1 + i
+
+		if _, exists := r.db[newID]; exists {
+			return err
+		}
+
+		vehicleList[i] = internal.Vehicle{
+			Id:                newID,
+			VehicleAttributes: v,
+		}
+	}
+
+	return nil
+}

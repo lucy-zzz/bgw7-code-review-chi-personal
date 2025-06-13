@@ -105,18 +105,38 @@ func (h *VehicleDefault) Create() http.HandlerFunc {
 			Dimensions:      input.Dimensions,
 		}
 
-		id, err := h.sv.Create(newVehicleAttributes)
+		err = h.sv.Create(newVehicleAttributes)
 		if err != nil {
 			w.Write([]byte(`{message: 409 Conflict: Identificador do veículo já existente.}`))
 			response.JSON(w, http.StatusBadRequest, 400)
 			return
 		}
 
-		response.JSON(w, http.StatusOK, map[string]any{
+		response.JSON(w, http.StatusCreated, map[string]any{
 			"message": "success",
-			"data":    id,
 		})
 
+	}
+}
+
+func (h *VehicleDefault) CreateSome() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var input []internal.VehicleAttributes
+		err := json.NewDecoder(r.Body).Decode(&input)
+
+		if err != nil {
+			w.Write([]byte(`"message": "400 Bad Request: Dados de algum veículo malformados ou incompletos."`))
+			response.JSON(w, http.StatusBadRequest, 400)
+		}
+
+		err = h.sv.CreateSome(input)
+
+		if err != nil {
+			w.Write([]byte(`"message": "409 Conflict: Algum veículo possui um identificador já existente."`))
+			response.JSON(w, http.StatusConflict, 409)
+		}
+
+		response.JSON(w, http.StatusCreated, 201)
 	}
 }
 
@@ -145,7 +165,7 @@ func (h *VehicleDefault) GetByColorAndYear() http.HandlerFunc {
 		vehiclesList, err := h.sv.FindByColorAndYear(vehicle)
 
 		if err != nil {
-			w.Write([]byte(`{message: 404 Not Found: Nenhum veículo encontrado com esses critérios. }`))
+			w.Write([]byte(`{"message": "404 Not Found: Nenhum veículo encontrado com esses critérios." }`))
 			response.JSON(w, http.StatusNotFound, 404)
 			return
 		}
@@ -187,7 +207,7 @@ func (h *VehicleDefault) GetByBrandAndYearInterval() http.HandlerFunc {
 		vehiclesList, err := h.sv.FindByBrandAndYearInterval(req)
 
 		if err != nil {
-			w.Write([]byte(`{message: 404 Not Found: Nenhum veículo encontrado com esses critérios. }`))
+			w.Write([]byte(`{"message": "404 Not Found: Nenhum veículo encontrado com esses critérios." }`))
 			response.JSON(w, http.StatusNotFound, 404)
 			return
 		}

@@ -110,3 +110,9 @@ func (s *VehicleDefault) UpdateFuelType(u internal.UpdateFuel) (err error) {
 	err = s.rp.UpdateFuelType(u)
 	return err
 }
+
+func (s *VehicleDefault) GetAverageCapacityByBrand(b string) (v float64, err error) {
+	v, err = s.rp.GetAverageCapacityByBrand(b)
+
+	return v, err
+}

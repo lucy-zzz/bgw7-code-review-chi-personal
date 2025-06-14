@@ -82,6 +82,7 @@ func (a *ServerChi) Run() (err error) {
 		rt.Delete("/{id}", hd.DeleteById())
 		rt.Get("/transmission/{type}", hd.GetByTransmissionType())
 		rt.Put("/{id}/update_fuel", hd.UpdateFuel())
+		rt.Get("/average_capacity/brand/{brand}", hd.GetAverageCapacityByBrand())
 	})
 
 	rt.Route("/vehiclesc", func(rt chi.Router) {

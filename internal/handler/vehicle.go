@@ -390,6 +390,24 @@ func (h *VehicleDefault) UpdateFuel() http.HandlerFunc {
 		}
 
 		response.JSON(w, http.StatusOK, 200)
+	}
+}
 
+func (h *VehicleDefault) GetAverageCapacityByBrand() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		brand := chi.URLParam(r, "brand")
+
+		data, err := h.sv.GetAverageCapacityByBrand(brand)
+
+		if err != nil {
+			http.Error(w, err.Error(), 404)
+			w.Write([]byte(`"message": "404 Not Found: Não foram encontrados veículos dessa marca."`))
+			return
+		}
+
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "success",
+			"data":    data,
+		})
 	}
 }

@@ -224,3 +224,22 @@ func (r *VehicleMap) UpdateFuelType(u internal.UpdateFuel) (err error) {
 
 	return nil
 }
+
+func (r *VehicleMap) GetAverageCapacityByBrand(b string) (v float64, err error) {
+	var sum int
+	var list []internal.Vehicle
+	for _, i := range r.db {
+		if i.Brand == b {
+			sum += i.Capacity
+			list = append(list, i)
+		}
+	}
+
+	if len(list) == 0 {
+		return 0, fmt.Errorf("404 Not Found: Não foram encontrados veículos dessa marca.")
+	}
+
+	v = float64(sum) / float64(len(list))
+
+	return v, err
+}

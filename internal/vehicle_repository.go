@@ -14,4 +14,5 @@ type VehicleRepository interface {
 	DeleteById(id int) (err error)
 	GetByTransmissionType(t string) (v map[int]Vehicle, err error)
 	UpdateFuelType(u UpdateFuel) (err error)
+	GetAverageCapacityByBrand(b string) (v float64, err error)
 }

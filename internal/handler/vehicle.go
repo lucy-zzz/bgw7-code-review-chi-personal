@@ -311,3 +311,29 @@ func (h *VehicleDefault) GetByFuelType() http.HandlerFunc {
 		return
 	}
 }
+
+func (h *VehicleDefault) DeleteById() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		idStr := chi.URLParam(r, "id")
+
+		id, err := strconv.Atoi(idStr)
+
+		if err != nil {
+			w.Write([]byte(`{message: 400 Bad Request: Dados do veículo mal formatados ou incompletos.}`))
+			response.JSON(w, http.StatusBadRequest, 400)
+			return
+		}
+
+		err = h.sv.DeleteById(id)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+
+			return
+		}
+
+		response.JSON(w, http.StatusNoContent, map[string]any{
+			"message": "204 No Content: Veículo removido com sucesso.",
+		})
+	}
+}

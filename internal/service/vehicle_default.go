@@ -89,3 +89,13 @@ func (s *VehicleDefault) GetByFuelType(t string) (v map[int]internal.Vehicle, er
 
 	return v, nil
 }
+
+func (s *VehicleDefault) DeleteById(id int) (err error) {
+	err = s.rp.DeleteById(id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -79,6 +79,7 @@ func (a *ServerChi) Run() (err error) {
 		rt.Post("/batch", hd.CreateSome())
 		rt.Put("/{id}/update_speed", hd.UpdateSpeed())
 		rt.Get("/fuel_type/{type}", hd.GetByFuelType())
+		rt.Delete("/{id}", hd.DeleteById())
 	})
 
 	rt.Route("/vehiclesc", func(rt chi.Router) {

@@ -174,3 +174,20 @@ func (r *VehicleMap) GetByFuelType(t string) (v map[int]internal.Vehicle, err er
 
 	return v, nil
 }
+
+func (r *VehicleMap) DeleteById(id int) (err error) {
+	found := false
+	db := r.db
+	for key := range r.db {
+		if key == id {
+			delete(db, key)
+			found = true
+		}
+	}
+
+	if !found {
+		return fmt.Errorf("404 Not Found: Veículo não encontrado.")
+	}
+
+	return nil
+}

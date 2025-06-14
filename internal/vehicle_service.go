@@ -10,4 +10,5 @@ type VehicleService interface {
 	GetAverageSpeedByBrand(b string) (v float64, err error)
 	CreateSome(vs []VehicleAttributes) (err error)
 	UpdateSpeed(v UpdateSpeed) (err error)
+	GetByFuelType(t string) (v map[int]Vehicle, err error)
 }

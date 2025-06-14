@@ -34,7 +34,7 @@ func (s *VehicleDefault) FindByColorAndYear(vehicle internal.VehicleAttributes) 
 	v, err = s.rp.FindByColorAndYear(vehicle)
 
 	if err != nil {
-		return map[int]internal.Vehicle{}, err
+		return v, err
 	}
 
 	return v, nil
@@ -44,7 +44,7 @@ func (s *VehicleDefault) FindByBrandAndYearInterval(r internal.BrandYearRangeSea
 	v, err = s.rp.FindByBrandAndYearInterval(r)
 
 	if err != nil {
-		return map[int]internal.Vehicle{}, err
+		return nil, err
 	}
 
 	return v, nil
@@ -78,4 +78,14 @@ func (s *VehicleDefault) UpdateSpeed(v internal.UpdateSpeed) (err error) {
 	}
 
 	return nil
+}
+
+func (s *VehicleDefault) GetByFuelType(t string) (v map[int]internal.Vehicle, err error) {
+	v, err = s.rp.GetByFuelType(t)
+
+	if err != nil {
+		return v, err
+	}
+
+	return v, nil
 }

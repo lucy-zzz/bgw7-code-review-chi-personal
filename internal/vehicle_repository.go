@@ -10,4 +10,5 @@ type VehicleRepository interface {
 	Create(v VehicleAttributes) (err error)
 	CreateSome(vs []VehicleAttributes) (err error)
 	UpdateSpeed(v UpdateSpeed) (err error)
+	GetByFuelType(t string) (v map[int]Vehicle, err error)
 }

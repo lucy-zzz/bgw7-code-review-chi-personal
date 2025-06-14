@@ -283,3 +283,31 @@ func (h *VehicleDefault) UpdateSpeed() http.HandlerFunc {
 		response.JSON(w, http.StatusOK, 200)
 	}
 }
+
+func (h *VehicleDefault) GetByFuelType() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fuelType := chi.URLParam(r, "type")
+
+		data, err := h.sv.GetByFuelType(fuelType)
+
+		if err != nil {
+			w.Write([]byte(`404 Not Found: Não foram encontrados veículos com esse tipo de combustível.`))
+			response.JSON(w, http.StatusNotFound, 404)
+			return
+		}
+
+		if len(data) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			response.JSON(w, http.StatusNotFound, map[string]string{
+				"message": "404 Not Found: Não foram encontrados veículos com esse tipo de combustível.",
+			})
+			return
+		}
+
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "success",
+			"data":    data,
+		})
+		return
+	}
+}

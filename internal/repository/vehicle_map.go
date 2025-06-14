@@ -157,3 +157,20 @@ func (r *VehicleMap) UpdateSpeed(v internal.UpdateSpeed) (err error) {
 
 	return nil
 }
+
+func (r *VehicleMap) GetByFuelType(t string) (v map[int]internal.Vehicle, err error) {
+	v = make(map[int]internal.Vehicle)
+	for key, i := range r.db {
+		if i.FuelType == t {
+			v[key] = i
+		}
+	}
+
+	if len(v) == 0 {
+		return v, err
+	}
+
+	fmt.Println("len", len(v))
+
+	return v, nil
+}

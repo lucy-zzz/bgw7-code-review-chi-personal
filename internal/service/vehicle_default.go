@@ -105,3 +105,8 @@ func (s *VehicleDefault) GetByTransmissionType(t string) (v map[int]internal.Veh
 
 	return v, err
 }
+
+func (s *VehicleDefault) UpdateFuelType(u internal.UpdateFuel) (err error) {
+	err = s.rp.UpdateFuelType(u)
+	return err
+}

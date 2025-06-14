@@ -145,8 +145,6 @@ func (r *VehicleMap) UpdateSpeed(v internal.UpdateSpeed) (err error) {
 		if r.db[i].Id == v.Id {
 			vehicle = r.db[i]
 			vehicle.MaxSpeed = v.Speed
-			fmt.Println(v.Speed, "v.Speed")
-			fmt.Println(vehicle.MaxSpeed, "MaxSpeed")
 			break
 		}
 	}
@@ -206,4 +204,23 @@ func (r *VehicleMap) GetByTransmissionType(t string) (v map[int]internal.Vehicle
 	}
 
 	return v, err
+}
+
+func (r *VehicleMap) UpdateFuelType(u internal.UpdateFuel) (err error) {
+	found := false
+
+	for _, vs := range r.db {
+		if vs.Id == u.Id {
+			found = true
+			temp := vs
+			temp.FuelType = u.FuelType
+			fmt.Println("vehicle", temp)
+		}
+	}
+
+	if !found {
+		return fmt.Errorf("404 Not Found: Veículo não encontrado")
+	}
+
+	return nil
 }

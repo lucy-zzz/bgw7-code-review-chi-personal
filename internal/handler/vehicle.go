@@ -355,3 +355,41 @@ func (h *VehicleDefault) GetByTransmissionType() http.HandlerFunc {
 		})
 	}
 }
+
+func (h *VehicleDefault) UpdateFuel() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		idStr := chi.URLParam(r, "id")
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			w.Write([]byte(`400 Bad Request: Tipo de combustível malformado ou não suportado.`))
+			return
+		}
+
+		var f struct {
+			FuelType string `json:"fuel_type"`
+		}
+
+		err = json.NewDecoder(r.Body).Decode(&f)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			w.Write([]byte(`400 Bad Request: Tipo de combustível malformado ou não suportado.`))
+			return
+		}
+
+		v := internal.UpdateFuel{
+			Id:       id,
+			FuelType: f.FuelType,
+		}
+
+		err = h.sv.UpdateFuelType(v)
+
+		if err != nil {
+			http.Error(w, err.Error(), 404)
+			return
+		}
+
+		response.JSON(w, http.StatusOK, 200)
+
+	}
+}

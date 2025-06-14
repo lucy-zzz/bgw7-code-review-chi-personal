@@ -55,3 +55,8 @@ type UpdateSpeed struct {
 	Id    int
 	Speed float64
 }
+
+type UpdateFuel struct {
+	Id       int
+	FuelType string
+}

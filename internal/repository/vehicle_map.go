@@ -191,3 +191,19 @@ func (r *VehicleMap) DeleteById(id int) (err error) {
 
 	return nil
 }
+
+func (r *VehicleMap) GetByTransmissionType(t string) (v map[int]internal.Vehicle, err error) {
+	v = make(map[int]internal.Vehicle)
+
+	for key, vs := range r.db {
+		if vs.Transmission == t {
+			v[key] = vs
+		}
+	}
+
+	if len(v) == 0 {
+		return v, fmt.Errorf("404 Not Found: Não foram encontrados veículos com esse tipo de transmissão.")
+	}
+
+	return v, err
+}

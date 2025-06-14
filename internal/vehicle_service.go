@@ -12,4 +12,5 @@ type VehicleService interface {
 	UpdateSpeed(v UpdateSpeed) (err error)
 	GetByFuelType(t string) (v map[int]Vehicle, err error)
 	DeleteById(id int) (err error)
+	GetByTransmissionType(t string) (v map[int]Vehicle, err error)
 }

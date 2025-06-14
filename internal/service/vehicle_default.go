@@ -99,3 +99,9 @@ func (s *VehicleDefault) DeleteById(id int) (err error) {
 
 	return nil
 }
+
+func (s *VehicleDefault) GetByTransmissionType(t string) (v map[int]internal.Vehicle, err error) {
+	v, err = s.rp.GetByTransmissionType(t)
+
+	return v, err
+}

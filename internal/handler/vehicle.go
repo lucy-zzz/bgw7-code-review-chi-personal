@@ -328,12 +328,30 @@ func (h *VehicleDefault) DeleteById() http.HandlerFunc {
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusNotFound)
-
 			return
 		}
 
 		response.JSON(w, http.StatusNoContent, map[string]any{
 			"message": "204 No Content: Veículo removido com sucesso.",
+		})
+	}
+}
+
+func (h *VehicleDefault) GetByTransmissionType() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		t := chi.URLParam(r, "type")
+
+		data, err := h.sv.GetByTransmissionType(t)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			w.Write([]byte(`{message: 404 Not Found: Não foram encontrados veículos com esse tipo de transmissão.}`))
+			return
+		}
+
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "success",
+			"data":    data,
 		})
 	}
 }

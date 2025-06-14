@@ -259,5 +259,20 @@ func (r *VehicleMap) GetByDimensions(minLength, maxLength, minWidth, maxWidth fl
 		return v, fmt.Errorf("404 Not Found: Não foram encontrados veículos com essas dimensões.")
 	}
 
-	return v, err
+	return v, nil
+}
+
+func (r *VehicleMap) GetByWeight(minW, maxW float64) (v map[int]internal.Vehicle, err error) {
+	v = make(map[int]internal.Vehicle)
+	for key, i := range r.db {
+		if i.Weight >= minW && i.Weight <= maxW {
+			v[key] = i
+		}
+	}
+
+	if len(v) == 0 {
+		return v, fmt.Errorf("404 Not Found: Não foram encontrados veículos nessa faixa de peso.")
+	}
+
+	return v, nil
 }

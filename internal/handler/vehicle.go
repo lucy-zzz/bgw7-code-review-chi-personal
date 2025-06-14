@@ -456,6 +456,49 @@ func (h *VehicleDefault) GetByDimensions() http.HandlerFunc {
 
 		data, err := h.sv.GetByDimensions(minLength, maxLength, minWidth, maxWidth)
 
+		if err != nil {
+			w.Write([]byte(`{message: 404 Not Found: Não foram encontrados veículos com essas dimensões.}`))
+			response.JSON(w, http.StatusNotFound, 404)
+			return
+		}
+
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "success",
+			"data":    data,
+		})
+
+	}
+}
+
+func (h *VehicleDefault) GetByWeight() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		min := r.URL.Query().Get("min")
+		max := r.URL.Query().Get("max")
+
+		wmin, err := strconv.ParseFloat(min, 64)
+
+		if err != nil {
+			w.Write([]byte(`{message: 400 Bad Request: Dados do veículo mal formatados ou incompletos.}`))
+			response.JSON(w, http.StatusBadRequest, 400)
+			return
+		}
+
+		wmax, err := strconv.ParseFloat(max, 64)
+
+		if err != nil {
+			w.Write([]byte(`{message: 400 Bad Request: Dados do veículo mal formatados ou incompletos.}`))
+			response.JSON(w, http.StatusBadRequest, 400)
+			return
+		}
+
+		data, err := h.sv.GetByWeight(wmin, wmax)
+
+		if err != nil {
+			w.Write([]byte(`{message: 404 Not Found: Não foram encontrados veículos nessa faixa de peso.}`))
+			response.JSON(w, http.StatusNotFound, 404)
+			return
+		}
+
 		response.JSON(w, http.StatusOK, map[string]any{
 			"message": "success",
 			"data":    data,

@@ -84,6 +84,7 @@ func (a *ServerChi) Run() (err error) {
 		rt.Put("/{id}/update_fuel", hd.UpdateFuel())
 		rt.Get("/average_capacity/brand/{brand}", hd.GetAverageCapacityByBrand())
 		rt.Get("/dimensions", hd.GetByDimensions())
+		rt.Get("/weight", hd.GetByWeight())
 	})
 
 	rt.Route("/vehiclesc", func(rt chi.Router) {

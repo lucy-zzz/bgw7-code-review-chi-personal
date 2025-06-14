@@ -122,3 +122,9 @@ func (s *VehicleDefault) GetByDimensions(minLength, maxLength, minWidth, maxWidt
 
 	return v, err
 }
+
+func (s *VehicleDefault) GetByWeight(minW, maxW float64) (v map[int]internal.Vehicle, err error) {
+	v, err = s.rp.GetByWeight(minW, maxW)
+
+	return v, err
+}

@@ -116,3 +116,9 @@ func (s *VehicleDefault) GetAverageCapacityByBrand(b string) (v float64, err err
 
 	return v, err
 }
+
+func (s *VehicleDefault) GetByDimensions(minLength, maxLength, minWidth, maxWidth float64) (v map[int]internal.Vehicle, err error) {
+	v, err = s.rp.GetByDimensions(minLength, maxLength, minWidth, maxWidth)
+
+	return v, err
+}

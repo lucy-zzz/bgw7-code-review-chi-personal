@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/bootcamp-go/web/response"
 	"github.com/go-chi/chi/v5"
@@ -409,5 +410,56 @@ func (h *VehicleDefault) GetAverageCapacityByBrand() http.HandlerFunc {
 			"message": "success",
 			"data":    data,
 		})
+	}
+}
+
+func (h *VehicleDefault) GetByDimensions() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		length := r.URL.Query().Get("length")
+
+		l := strings.Split(length, "-")
+
+		minLength, err := strconv.ParseFloat(l[0], 64)
+
+		if err != nil {
+			w.Write([]byte(`{message: 400 Bad Request: Dados do veículo mal formatados ou incompletos.}`))
+			response.JSON(w, http.StatusBadRequest, 400)
+			return
+		}
+
+		maxLength, err := strconv.ParseFloat(l[1], 64)
+
+		if err != nil {
+			w.Write([]byte(`{message: 400 Bad Request: Dados do veículo mal formatados ou incompletos.}`))
+			response.JSON(w, http.StatusBadRequest, 400)
+			return
+		}
+
+		width := r.URL.Query().Get("width")
+		wh := strings.Split(width, "-")
+
+		minWidth, err := strconv.ParseFloat(wh[0], 64)
+
+		if err != nil {
+			w.Write([]byte(`{message: 400 Bad Request: Dados do veículo mal formatados ou incompletos.}`))
+			response.JSON(w, http.StatusBadRequest, 400)
+			return
+		}
+
+		maxWidth, err := strconv.ParseFloat(wh[1], 64)
+
+		if err != nil {
+			w.Write([]byte(`{message: 400 Bad Request: Dados do veículo mal formatados ou incompletos.}`))
+			response.JSON(w, http.StatusBadRequest, 400)
+			return
+		}
+
+		data, err := h.sv.GetByDimensions(minLength, maxLength, minWidth, maxWidth)
+
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "success",
+			"data":    data,
+		})
+
 	}
 }

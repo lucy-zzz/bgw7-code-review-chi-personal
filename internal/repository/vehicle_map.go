@@ -243,3 +243,21 @@ func (r *VehicleMap) GetAverageCapacityByBrand(b string) (v float64, err error) 
 
 	return v, err
 }
+
+func (r *VehicleMap) GetByDimensions(minLength, maxLength, minWidth, maxWidth float64) (v map[int]internal.Vehicle, err error) {
+	v = make(map[int]internal.Vehicle)
+
+	for key, i := range r.db {
+		if i.Dimensions.Length >= minLength && i.Dimensions.Length <= maxLength {
+			if i.Dimensions.Width >= minWidth && i.Dimensions.Width <= maxWidth {
+				v[key] = i
+			}
+		}
+	}
+
+	if len(v) == 0 {
+		return v, fmt.Errorf("404 Not Found: Não foram encontrados veículos com essas dimensões.")
+	}
+
+	return v, err
+}

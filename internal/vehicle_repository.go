@@ -15,4 +15,5 @@ type VehicleRepository interface {
 	GetByTransmissionType(t string) (v map[int]Vehicle, err error)
 	UpdateFuelType(u UpdateFuel) (err error)
 	GetAverageCapacityByBrand(b string) (v float64, err error)
+	GetByDimensions(minLength, maxLength, minWidth, maxWidth float64) (v map[int]Vehicle, err error)
 }
